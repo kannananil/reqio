@@ -5,9 +5,9 @@ import Dropdown from '../../src/components/Dropdown';
 
 describe('Dropdown Component', () => {
   const mockItems = [
-    { name: 'Item 1', color: '#FF0000', onSelect: vi.fn() },
-    { name: 'Item 2', color: '#00FF00', onSelect: vi.fn() },
-    { name: 'Item 3', color: '#0000FF', onSelect: vi.fn() },
+    { id: 'item-1', name: 'Item 1', color: '#FF0000', onSelect: vi.fn() },
+    { id: 'item-2', name: 'Item 2', color: '#00FF00', onSelect: vi.fn() },
+    { id: 'item-3', name: 'Item 3', color: '#0000FF', onSelect: vi.fn() },
   ];
 
   it('should render the selected item by default', () => {

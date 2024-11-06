@@ -1,0 +1,29 @@
+@import '../../styles/variables/colors';
+
+.request-auth-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 8px;
+
+  .auth-placeholder {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    color: $secondary-light-color;
+    margin: 20px 10px;
+  }
+
+  .dropdown {
+    width: 125px !important;
+    height: 40px !important;
+
+    &-selected {
+      width: 125px !important;
+    }
+
+    &-menu {
+      width: 125px !important;
+    }
+  }
+}

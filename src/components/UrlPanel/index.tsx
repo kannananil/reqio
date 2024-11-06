@@ -15,11 +15,11 @@ const UrlPanel = ({ url, onMethodChange, onSend, onUrlChange }: UrlPanelProps) =
     onUrlChange(event.target.value);
 
   const items = [
-    { name: 'GET', onSelect: () => onMethodChange('GET'), color: '#10B95F' },
-    { name: 'POST', onSelect: () => onMethodChange('POST'), color: '#FFC107' },
-    { name: 'PATCH', onSelect: () => onMethodChange('PATCH'), color: '#6366F1' },
-    { name: 'PUT', onSelect: () => onMethodChange('PUT'), color: '#007BFF' },
-    { name: 'DELETE', onSelect: () => onMethodChange('DELETE'), color: '#DC3545' },
+    { id: 'GET', name: 'GET', onSelect: () => onMethodChange('GET'), color: '#10B95F' },
+    { id: 'POST', name: 'POST', onSelect: () => onMethodChange('POST'), color: '#FFC107' },
+    { id: 'PATCH', name: 'PATCH', onSelect: () => onMethodChange('PATCH'), color: '#6366F1' },
+    { id: 'PUT', name: 'PUT', onSelect: () => onMethodChange('PUT'), color: '#007BFF' },
+    { id: 'DELETE', name: 'DELETE', onSelect: () => onMethodChange('DELETE'), color: '#DC3545' },
   ];
 
   return (

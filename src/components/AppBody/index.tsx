@@ -1,14 +1,18 @@
 import './index.scss';
+import { Method } from './types.ts';
+
+import { delete_req, get, patch, post, put } from '../../api/rest.ts';
+import { getErrorCode, getHttpStatusText } from '../../api/statusCodes.ts';
+import { Header, QueryParam } from '../RequestPanel/types.ts';
+
 import RequestPanel from '../RequestPanel';
 import ResponsePanel from '../ResponsePanel';
 import PaneSplitter from '../PaneSplitter';
 import UrlPanel from '../UrlPanel';
-import { delete_req, get, patch, post, put } from '../../api/rest.ts';
-import { getErrorCode, getHttpStatusText } from '../../api/statusCodes.ts';
 
 import { useState } from 'react';
 import { AxiosError, AxiosResponse } from 'axios';
-import { Header, QueryParam } from '../RequestPanel/types.ts';
+import { AuthType, Credentials } from '../RequestAuthPanel/types.ts';
 
 const AppBody = () => {
   const [method, setMethod] = useState('GET');
@@ -17,6 +21,7 @@ const AppBody = () => {
     { key: 'Content-Type', value: 'application/json' },
   ]);
   const [queryParams, setQueryParams] = useState<QueryParam[]>([]);
+  const [credentials, setCredentials] = useState<Credentials>({ authType: AuthType.NoAuth });
   const [body, setBody] = useState('{}');
   const [isNoRequestTriggered, setIsNoRequestTriggered] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -64,31 +69,37 @@ const AppBody = () => {
     setIsNoRequestTriggered(false);
     setIsLoading(true);
     const combinedUrl = constructUrlWithQueryParams();
+    const consolidatedHeaders = headers.slice();
+
+    if (credentials.authType == AuthType.BasicAuth) {
+      const encodedHeaderValue = btoa(`Basic ${credentials.username}:${credentials.password}`);
+      consolidatedHeaders.push({ key: 'Authorization', value: encodedHeaderValue });
+    }
 
     const startTime = performance.now();
 
-    if (method === 'GET' && url !== '') {
-      get(combinedUrl, headers)
+    if (method === Method.Get && url !== '') {
+      get(combinedUrl, consolidatedHeaders)
         .then((response) => onSuccessResponse(response, startTime))
         .catch(onFailureResponse);
     }
-    if (method === 'POST' && url !== '') {
-      post(combinedUrl, JSON.parse(body), headers)
+    if (method === Method.Post && url !== '') {
+      post(combinedUrl, JSON.parse(body), consolidatedHeaders)
         .then((response) => onSuccessResponse(response, startTime))
         .catch(onFailureResponse);
     }
-    if (method === 'PATCH' && url !== '') {
-      patch(combinedUrl, JSON.parse(body), headers)
+    if (method === Method.Patch && url !== '') {
+      patch(combinedUrl, JSON.parse(body), consolidatedHeaders)
         .then((response) => onSuccessResponse(response, startTime))
         .catch(onFailureResponse);
     }
-    if (method === 'PUT' && url !== '') {
-      put(combinedUrl, JSON.parse(body), headers)
+    if (method === Method.Put && url !== '') {
+      put(combinedUrl, JSON.parse(body), consolidatedHeaders)
         .then((response) => onSuccessResponse(response, startTime))
         .catch(onFailureResponse);
     }
-    if (method === 'DELETE' && url !== '') {
-      delete_req(combinedUrl, headers)
+    if (method === Method.Delete && url !== '') {
+      delete_req(combinedUrl, consolidatedHeaders)
         .then((response) => onSuccessResponse(response, startTime))
         .catch(onFailureResponse);
     }
@@ -110,6 +121,10 @@ const AppBody = () => {
     setQueryParams(updatedParams);
   };
 
+  const onCredentialsChange = (credentials: Credentials) => {
+    setCredentials(credentials);
+  };
+
   return (
     <div className="app-body">
       <UrlPanel url={url} onMethodChange={setMethod} onUrlChange={setUrl} onSend={onSend} />
@@ -124,6 +139,7 @@ const AppBody = () => {
           onNewHeaderAddition={onNewHeaderAddition}
           onParamsChange={onParamsChange}
           onNewParamAddition={onNewParamAddition}
+          onCredentialsChange={onCredentialsChange}
         />
         <PaneSplitter direction="horizontal" />
         <ResponsePanel

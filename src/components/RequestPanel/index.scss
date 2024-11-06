@@ -12,16 +12,4 @@
     height: 100%;
     color: $secondary-light-color;
   }
-
-  .auth-panel {
-    align-items: left;
-
-    .auth-placeholder {
-      display: flex;
-      align-items: center;
-      height: 100%;
-      color: $secondary-light-color;
-      margin: 0 20px;
-    }
-  }
 }
